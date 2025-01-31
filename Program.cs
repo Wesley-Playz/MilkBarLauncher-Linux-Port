@@ -111,7 +111,7 @@ namespace BOTWMultiplayerCLI
             Console.WriteLine($"Port: {serverData.Port}");
             Console.WriteLine($"Password: {serverData.Password}");
             Console.WriteLine($"Player Name: {serverData.Name}");
-            Console.WriteLine($"Player Name: {serverData.Number}\n");
+            Console.WriteLine($"Player Number: {serverData.Number}\n");
 
             if (string.IsNullOrEmpty(GameDir) || string.IsNullOrEmpty(CemuDir))
                 throw new ApplicationException("Error: Game or Cemu directories not configured.");
