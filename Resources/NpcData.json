@@ -1,0 +1,142 @@
+[
+  {
+    "Name": "Revali",
+    "Folder": "Npc_Rito_Hero"
+  },
+  {
+    "Name": "Urbosa",
+    "Folder": "Npc_Gerudo_Hero"
+  },
+  {
+    "Name": "Mipha",
+    "Folder": "Npc_Zora_Hero"
+  },
+  {
+    "Name": "Daruk",
+    "Folder": "Npc_Goron_Hero"
+  },
+  {
+    "Name": "Tali",
+    "Folder": "Npc_Gerudo_Champion"
+  },
+  {
+    "Name": "Buliara",
+    "Folder": "Npc_Gerudo_General"
+  },
+  {
+    "Name": "Isha",
+    "Folder": "Npc_Gerudo_Jolien"
+  },
+  {
+    "Name": "Shabonne",
+    "Folder": "Npc_Gerudo_Promoter"
+  },
+  {
+    "Name": "Riju",
+    "Folder": "Npc_Gerudo_Queen"
+  },
+  {
+    "Name": "Essa/Frelly",
+    "Folder": "Npc_Gerudo_Shopkeeper_000"
+  },
+  {
+    "Name": "Kohm",
+    "Folder": "Npc_Gerudo_Shopkeeper_001"
+  },
+  {
+    "Name": "Bludo",
+    "Folder": "Npc_Goron_Darnia"
+  },
+  {
+    "Name": "Bolson",
+    "Folder": "Npc_Hylia_Carpenter_000"
+  },
+  {
+    "Name": "Hudson",
+    "Folder": "Npc_Hylia_Carpenter_001"
+  },
+  {
+    "Name": "Hudson",
+    "Folder": "Npc_Hylia_Carpenter_001_Wedding"
+  },
+  {
+    "Name": "Vilia",
+    "Folder": "Npc_Hylia_Drag"
+  },
+  {
+    "Name": "Sayge",
+    "Folder": "Npc_Hylia_Dyer"
+  },
+  {
+    "Name": "King Rhoam",
+    "Folder": "Npc_King_Ghost"
+  },
+  {
+    "Name": "Old Man",
+    "Folder": "Npc_King_Vagrant"
+  },
+  {
+    "Name": "Hestu",
+    "Folder": "Npc_Korogu_Minister"
+  },
+  {
+    "Name": "Kilton",
+    "Folder": "Npc_MamonoShop"
+  },
+  {
+    "Name": "Harth",
+    "Folder": "Npc_Rito_Hearts"
+  },
+  {
+    "Name": "Tulin",
+    "Folder": "Npc_Rito_Moto"
+  },
+  {
+    "Name": "Kass",
+    "Folder": "Npc_Rito_Musician"
+  },
+  {
+    "Name": "Saki",
+    "Folder": "Npc_Rito_Saki"
+  },
+  {
+    "Name": "Teba",
+    "Folder": "Npc_Rito_Teba"
+  },
+  {
+    "Name": "Robbie",
+    "Folder": "Npc_Scientist_M_000"
+  },
+  {
+    "Name": "Purah",
+    "Folder": "Npc_Scientist_W_000"
+  },
+  {
+    "Name": "Pikango",
+    "Folder": "Npc_Shiekah_Artist"
+  },
+  {
+    "Name": "Cado",
+    "Folder": "Npc_Shiekah_Escort_000"
+  },
+  {
+    "Name": "Dorian",
+    "Folder": "Npc_Shiekah_Escort_001"
+  },
+  {
+    "Name": "Paya",
+    "Folder": "Npc_Shiekah_Heir"
+  },
+  {
+    "Name": "Impa",
+    "Folder": "Npc_Shiekah_Impa"
+  },
+  {
+    "Name": "Muzu",
+    "Folder": "Npc_Zora_Priest"
+  },
+  {
+    "Name": "Sidon",
+    "Folder": "Npc_Zora_Prince"
+  }
+]
