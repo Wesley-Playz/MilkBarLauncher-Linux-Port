@@ -10,9 +10,9 @@ namespace BOTWMultiplayerCLI
 {
     class Program
     {
-        static string CemuDir = @"C:\path_to_cemu"; // Default Cemu directory
-        static string GameDir => System.IO.Path.Combine(CemuDir, @"mlc01\usr\title\00050000\101c9400\code");
-        static string InjectDLLPath = @"Resources\InjectDLL.dll"; // Path to the DLL for injection
+        static string CemuDir = @"C:\Users\mad\Documents\Emulators\Wii U\Cemu"; // Default Cemu directory
+        static string GameDir = @"C:\Users\mad\Documents\Games\Wii U\The Legend of Zelda Breath of the Wild\code";
+        static readonly string InjectDLLPath = @"Resources\InjectDLL.dll"; // Path to the DLL for injection
 
         static async Task Main(string[] args)
         {
@@ -22,7 +22,7 @@ namespace BOTWMultiplayerCLI
             {
                 Console.WriteLine("\nMain Menu:");
                 Console.WriteLine("1. Connect to Server");
-                Console.WriteLine("2. Set Cemu Directory");
+                Console.WriteLine("2. Set Directories");
                 Console.WriteLine("3. Exit");
 
                 Console.Write("Enter your choice: ");
@@ -51,9 +51,12 @@ namespace BOTWMultiplayerCLI
             Console.Write("Enter the path to your Cemu directory: ");
             string inputPath = Console.ReadLine();
 
+            Console.Write("Enter the path to your game U-King.rpx ex: BOTW/code/U-King.rpx");
+            string gamePath = Console.ReadLine();
+
             if (string.IsNullOrWhiteSpace(inputPath) || !System.IO.Directory.Exists(inputPath))
             {
-                Console.WriteLine("Invalid directory. Please ensure the path is correct.");
+                Console.WriteLine("Invalid Cemu directory. Please ensure the path is correct.");
                 return;
             }
 
@@ -63,7 +66,13 @@ namespace BOTWMultiplayerCLI
                 return;
             }
 
+            if (!System.IO.File.Exists(gamePath)) {
+                Console.WriteLine("The specified path does not contain U-King.rpx. Please ensure the path is correct.");
+                return;
+            }
+
             CemuDir = inputPath;
+            GameDir = gamePath;
             Console.WriteLine($"Cemu directory has been set to: {CemuDir}");
         }
 
@@ -95,15 +104,8 @@ namespace BOTWMultiplayerCLI
                 playerName = "Player";
             }
 
-            Console.Write("Enter your player number: ");
-            int playerNumber = Convert.ToInt32(Console.ReadLine());
-
             // Create ServerDataDTO and set the values
-            ServerDataDTO serverData = new ServerDataDTO(serverIp, serverPort, serverPassword, playerName, playerNumber)
-            {
-                Name = playerName,
-                Number = playerNumber
-            };
+            ServerDataDTO serverData = new ServerDataDTO(serverIp, serverPort, serverPassword, playerName);
 
             // Print the entered server details
             Console.WriteLine("\nEntered Server Details:");
@@ -132,7 +134,10 @@ namespace BOTWMultiplayerCLI
             }
 
             Console.WriteLine("Starting Cemu...");
-            var cemuProcess = Process.Start($"{CemuDir}\\Cemu.exe");
+
+            Console.WriteLine($@"{GameDir}\U-King.rpx");
+
+            var cemuProcess = Process.Start($"{CemuDir}\\Cemu.exe", $@"-g ""{GameDir}\U-King.rpx""");
             if (cemuProcess == null)
                 throw new Exception("Error: Failed to start Cemu.");
 

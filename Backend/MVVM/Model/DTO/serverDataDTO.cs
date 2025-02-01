@@ -15,13 +15,12 @@ namespace Breath_of_the_Wild_Multiplayer.MVVM.Model.DTO
         // Indicates whether the server is open
         public bool Open { get; private set; }
 
-        public ServerDataDTO(string ip, int port, string password, string name, int number) // Add this constructor
+        public ServerDataDTO(string ip, int port, string password, string name) // Add this constructor
         {
             IP = ip;
             Port = port;
             Password = password;
             Name = name;
-            Number = number;
         }
 
         /// <summary>

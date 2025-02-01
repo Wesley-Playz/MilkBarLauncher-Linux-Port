@@ -8,10 +8,10 @@ namespace Breath_of_the_Wild_Multiplayer.Source_files
 {
     public static class NamedPipes
     {
-        private static NamedPipeServerStream _server;
+        private static NamedPipeServerStream? _server;
         public static bool Online = false;
-        public static Thread ListenThread;
-        public static EventHandler<string> PipeReceived;
+        public static Thread? ListenThread;
+        public static EventHandler<string>? PipeReceived;
 
         public static void StartServer()
         {
