@@ -61,10 +61,9 @@ public static class Injector
         //    Where(process => Filter != null ? !Filter.Any(p => p.Id == process.Id) : true).Count());
 
         Process ProcessToInject = CemuProcess;
-
-        if (ProcessToInject == null)
-            throw new Exception("Failed to find Cemu process");
-
+        
+        if (ProcessToInject == null) throw new Exception("Failed to find Cemu process");
+        
         if (!File.Exists(dllPath))
         {
             ProcessToInject.Kill();
@@ -104,7 +103,7 @@ public static class Injector
 
         IntPtr hThread = CreateRemoteThread(hndProc, IntPtr.Zero, 0, loadlibAddy, lpAddress, 0, IntPtr.Zero);
 
-        CloseHandle(hThread);
+        _ = CloseHandle(hThread);
 
         return true;
     }

@@ -137,30 +137,21 @@ namespace BOTWMultiplayerCLI
 
             Console.WriteLine($@"{GameDir}\U-King.rpx");
 
-            var cemuProcess = Process.Start($"{CemuDir}\\Cemu.exe", $@"-g ""{GameDir}\U-King.rpx""");
-            if (cemuProcess == null)
-                throw new Exception("Error: Failed to start Cemu.");
-
+            Process CemuProcess = Process.Start($"{CemuDir}\\Cemu.exe", $@"-g ""{GameDir}\U-King.rpx""") ?? throw new Exception("Error: Failed to start Cemu.");
             await Task.Delay(2000);
 
             Console.WriteLine("Injecting DLL...");
+            Injector.InjectToSpecificProcess("Cemu", "Resources\\InjectDLL.dll", CemuProcess);
             List<Process> ProcessesToFilter = Injector.GetProcesses("Cemu");
 
-            Process injectedProcess = null;
-            for (int i = 0; i < 5; i++) // Retry injection
-            {
-                injectedProcess = Injector.Inject("Cemu", InjectDLLPath, ProcessesToFilter);
-                if (injectedProcess != null)
-                {
-                    Console.WriteLine("DLL successfully injected.");
-                    break;
-                }
-                Console.WriteLine("Retrying DLL injection...");
-                await Task.Delay(1000);
-            }
-
-            if (injectedProcess == null)
-                throw new Exception("Error: DLL injection failed after retries.");
+            // Process? CemuProcess = null;
+            // await Task.Run(() => {
+            //     CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
+            // });
+            
+            // If the injection failed after multiple attempts throw an error
+            // if (CemuProcess == new Process())
+            //     throw new Exception("Error: DLL injection failed after retries.");
 
             Console.WriteLine("Starting pipe server...");
             try
@@ -169,7 +160,7 @@ namespace BOTWMultiplayerCLI
             }
             catch (Exception ex)
             {
-                injectedProcess.Kill();
+                CemuProcess.Kill();
                 throw new Exception("Error: Pipe server failed to start.", ex);
             }
 
@@ -177,14 +168,14 @@ namespace BOTWMultiplayerCLI
             var instruction = Encoding.UTF8.GetBytes($"!connect;{serverData.IP};{serverData.Port};;Player;{serverData.Name};0;Link:Link;[END]");
             if (!NamedPipes.sendInstruction(instruction))
             {
-                injectedProcess.Kill();
+                CemuProcess.Kill();
                 throw new ApplicationException("Error: Internal connection failed.");
             }
 
             Console.WriteLine("Starting server loop...");
             if (!NamedPipes.sendInstruction("!startServerLoop"))
             {
-                injectedProcess.Kill();
+                CemuProcess.Kill();
                 throw new ApplicationException("Error: Could not start server loop.");
             }
 
