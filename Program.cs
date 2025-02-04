@@ -51,7 +51,7 @@ namespace BOTWMultiplayerCLI
             Console.Write("Enter the path to your Cemu directory: ");
             string inputPath = Console.ReadLine();
 
-            Console.Write("Enter the path to your game U-King.rpx ex: BOTW/code/U-King.rpx");
+            Console.Write("Enter the path to your game U-King.rpx ex: mcl01/usr/title/00050000/101c9400/code/U-King.rpx: ");
             string gamePath = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(inputPath) || !System.IO.Directory.Exists(inputPath))
@@ -66,7 +66,8 @@ namespace BOTWMultiplayerCLI
                 return;
             }
 
-            if (!System.IO.File.Exists(gamePath)) {
+            if (!System.IO.File.Exists(System.IO.Path.Combine(gamePath, "U-King.rpx")))
+            {
                 Console.WriteLine("The specified path does not contain U-King.rpx. Please ensure the path is correct.");
                 return;
             }
@@ -74,6 +75,7 @@ namespace BOTWMultiplayerCLI
             CemuDir = inputPath;
             GameDir = gamePath;
             Console.WriteLine($"Cemu directory has been set to: {CemuDir}");
+            Console.WriteLine($"Game directory has been set to: {GameDir}");
         }
 
         public static async Task ConnectToServer()
@@ -97,7 +99,7 @@ namespace BOTWMultiplayerCLI
                 return;
             }
 
-            Console.Write("Enter your player name (default is player): ");
+            Console.Write("Enter your player name (default is Player): ");
             string playerName = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(playerName))
             {
