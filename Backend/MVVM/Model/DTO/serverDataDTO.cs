@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Breath_of_the_Wild_Multiplayer.MVVM.Model.DTO
@@ -29,31 +30,26 @@ namespace Breath_of_the_Wild_Multiplayer.MVVM.Model.DTO
         public void PingServer()
         {
             Console.WriteLine($"Pinging server at {IP}:{Port}...");
-            try
-            {
-                using (var client = new TcpClient())
-                {
-                    // Attempt to connect to the server with a timeout
-                    var result = client.BeginConnect(IP, Port, null, null);
-                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2)); // 2-second timeout
+            
+            IPEndPoint ip = new IPEndPoint(IPAddress.Parse(this.IP), this.Port);
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                    if (!success)
-                    {
-                        Open = false;
-                        Console.WriteLine("Ping failed: Connection timed out.");
-                        return;
-                    }
+            var result = s.BeginConnect(ip, null, null);
 
-                    client.EndConnect(result); // Complete the connection
-                    Open = true;
-                    Console.WriteLine("Ping successful: Server is open.");
-                }
-            }
-            catch (Exception ex)
+            bool success = result.AsyncWaitHandle.WaitOne(500, true);
+
+
+            if (!success)
             {
+                s.Close();
                 Open = false;
-                Console.WriteLine($"Ping failed: {ex.Message}");
+                Console.WriteLine($"Ping failed: {s.RemoteEndPoint} is closed.");
+                return;
             }
+
+            Console.WriteLine("Ping successful: Server is open.");
+
+            Open = true;
         }
     }
 }

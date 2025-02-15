@@ -128,6 +128,7 @@ namespace BOTWMultiplayerCLI
 
             Console.WriteLine("Pinging server...");
             serverData.PingServer();
+            Thread.Sleep(1000);
 
             if (!serverData.Open)
             {
@@ -135,25 +136,27 @@ namespace BOTWMultiplayerCLI
                 return;
             }
 
-            Console.WriteLine("Starting Cemu...");
+            List<Process> ProcessesToFilter = Injector.GetProcesses("Cemu");
 
-            Console.WriteLine($@"{GameDir}\U-King.rpx");
+            Console.WriteLine("Starting Cemu...");
 
             Process CemuProcess = Process.Start($"{CemuDir}\\Cemu.exe", $@"-g ""{GameDir}\U-King.rpx""") ?? throw new Exception("Error: Failed to start Cemu.");
             await Task.Delay(2000);
 
             Console.WriteLine("Injecting DLL...");
-            Injector.InjectToSpecificProcess("Cemu", "Resources\\InjectDLL.dll", CemuProcess);
-            List<Process> ProcessesToFilter = Injector.GetProcesses("Cemu");
 
-            // Process? CemuProcess = null;
-            // await Task.Run(() => {
-            //     CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
-            // });
+            await Task.Run(() => {
+                CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
+            });
+
+
+            await Task.Run(() => {
+                CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
+            });
             
             // If the injection failed after multiple attempts throw an error
-            // if (CemuProcess == new Process())
-            //     throw new Exception("Error: DLL injection failed after retries.");
+            if (CemuProcess == new Process())
+                throw new Exception("Error: DLL injection failed after retries.");
 
             Console.WriteLine("Starting pipe server...");
             try
@@ -167,7 +170,7 @@ namespace BOTWMultiplayerCLI
             }
 
             Console.WriteLine("Connecting to server...");
-            var instruction = Encoding.UTF8.GetBytes($"!connect;{serverData.IP};{serverData.Port};;Player;{serverData.Name};0;Link:Link;[END]");
+            var instruction = Encoding.UTF8.GetBytes($"!connect;{serverData.IP};{serverData.Port};{serverPassword};Player;{serverData.Name};0)");
             if (!NamedPipes.sendInstruction(instruction))
             {
                 CemuProcess.Kill();
