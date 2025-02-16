@@ -166,7 +166,7 @@ namespace BOTWMultiplayerCLI
             }
 
             Console.WriteLine("Connecting to server...");
-            List<byte> instruction = Encoding.UTF8.GetBytes("!connect;127.0.0.1;5050;;Link;Server-Name;0;Jugador1ModelNameLongForASpecificReason:Link;[END]").ToList();
+            List<byte> instruction = Encoding.UTF8.GetBytes($"!connect;{serverData.IP};{serverData.Port};{serverPassword};Link;{serverData.Name};0;Jugador1ModelNameLongForASpecificReason:Link;[END]").ToList();
 
             await Task.Run(() => {
                 if (!NamedPipes.sendInstruction(instruction.ToArray()))
