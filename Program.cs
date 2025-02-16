@@ -10,8 +10,8 @@ namespace BOTWMultiplayerCLI
 {
     class Program
     {
-        static string CemuDir = @"C:\Users\mad\Documents\Emulators\Wii U\Cemu"; // Default Cemu directory
-        static string GameDir = @"C:\Users\mad\Documents\Games\Wii U\The Legend of Zelda Breath of the Wild\code";
+        static string CemuDir = "/home/mad/Documents/Emulators/Cemu"; // Default Cemu directory
+        static string GameDir = "/home/mad/Documents/Games/The Legend of Zelda Breath of the Wild/code/";
         static readonly string InjectDLLPath = @"Resources\InjectDLL.dll"; // Path to the DLL for injection
 
         static async Task Main(string[] args)
@@ -139,14 +139,16 @@ namespace BOTWMultiplayerCLI
 
             Console.WriteLine("Starting Cemu...");
 
-            Process CemuProcess = Process.Start($"{CemuDir}\\Cemu.exe", $@"-g ""{GameDir}\U-King.rpx""") ?? throw new Exception("Error: Failed to start Cemu.");
+            Process CemuProcess = Process.Start($"{CemuDir}/Cemu.AppImage", $@"-g ""{GameDir}/U-King.rpx""") ?? throw new Exception("Error: Failed to start Cemu.");
             await Task.Delay(2000);
 
             Console.WriteLine("Injecting DLL...");
 
-            await Task.Run(() => {
-                CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
-            });
+            // await Task.Run(() => {
+            //     CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
+            // });
+
+            Injector.InjectToSpecificProcess("Cemu", "Resources/InjectDLL.dll", CemuProcess);
             
             // If the injection failed after multiple attempts throw an error
             if (CemuProcess == new Process())
