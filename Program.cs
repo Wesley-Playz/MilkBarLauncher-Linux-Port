@@ -115,7 +115,6 @@ namespace BOTWMultiplayerCLI
             Console.WriteLine($"Port: {serverData.Port}");
             Console.WriteLine($"Password: {serverData.Password}");
             Console.WriteLine($"Player Name: {serverData.Name}");
-            Console.WriteLine($"Player Number: {serverData.Number}\n");
 
             if (string.IsNullOrEmpty(GameDir) || string.IsNullOrEmpty(CemuDir))
                 throw new ApplicationException("Error: Game or Cemu directories not configured.");
@@ -170,12 +169,15 @@ namespace BOTWMultiplayerCLI
             }
 
             Console.WriteLine("Connecting to server...");
-            var instruction = Encoding.UTF8.GetBytes($"!connect;{serverData.IP};{serverData.Port};{serverPassword};Player;{serverData.Name};0)");
-            if (!NamedPipes.sendInstruction(instruction))
-            {
-                CemuProcess.Kill();
-                throw new ApplicationException("Error: Internal connection failed.");
-            }
+            var instruction = Encoding.UTF8.GetBytes($"!connect;{serverData.IP};{serverData.Port};{serverPassword};Player;{serverData.Name};0;)");
+
+            await Task.Run(() => {
+                if (!NamedPipes.sendInstruction(instruction))
+                {
+                    CemuProcess.Kill();
+                    throw new ApplicationException("Error: Internal connection failed.");
+                }
+            });
 
             Console.WriteLine("Starting server loop...");
             if (!NamedPipes.sendInstruction("!startServerLoop"))

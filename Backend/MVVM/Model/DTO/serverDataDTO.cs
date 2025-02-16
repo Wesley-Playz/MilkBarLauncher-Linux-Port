@@ -11,7 +11,6 @@ namespace Breath_of_the_Wild_Multiplayer.MVVM.Model.DTO
         public string IP { get; set; }
         public int Port { get; set; }
         public string Password { get; set; }
-        public int Number { get; set; }
 
         // Indicates whether the server is open
         public bool Open { get; private set; }

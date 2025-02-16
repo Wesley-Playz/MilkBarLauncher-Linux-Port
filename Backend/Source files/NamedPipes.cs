@@ -9,7 +9,7 @@ namespace Breath_of_the_Wild_Multiplayer.Source_files
     public static class NamedPipes
     {
         private static NamedPipeServerStream _server;
-        public static bool Online = true;
+        public static bool Online = false;
         public static Thread ListenThread;
         public static EventHandler<string> PipeReceived;
 
@@ -31,7 +31,7 @@ namespace Breath_of_the_Wild_Multiplayer.Source_files
         {
             while(true)
             {
-                string dllMessage = receiveResponse().Replace("\0", "");
+                string dllMessage = ReceiveResponse().Replace("\0", "");
 
                 if(PipeReceived != null)
                 {
@@ -59,13 +59,17 @@ namespace Breath_of_the_Wild_Multiplayer.Source_files
             {
                 _server.Write(instruction, 0, instruction.Length);
 
-                if (receiveResponse().Contains("Succeeded"))
+                string response = ReceiveResponse();
+
+                if (response.Contains("Succeeded"))
                     return true;
 
+                Console.WriteLine($"Response: {response}");
                 return false;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 if (Online)
                     _server.Disconnect();
                 Online = false;
@@ -73,7 +77,7 @@ namespace Breath_of_the_Wild_Multiplayer.Source_files
             }
         }
 
-        public static string receiveResponse()
+        public static string ReceiveResponse()
         {
             byte[] buff = new byte[2048];
 
