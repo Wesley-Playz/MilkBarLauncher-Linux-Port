@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain_Functions.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="InterpolationFunctions.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Client.cpp">
+      <Filter>Connectivity</Filter>
+    </ClCompile>
+    <ClCompile Include="Deserializer.cpp">
+      <Filter>Connectivity</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpretation.cpp">
+      <Filter>Connectivity</Filter>
+    </ClCompile>
+    <ClCompile Include="NamedPipes.cpp">
+      <Filter>Connectivity</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>Connectivity</Filter>
+    </ClCompile>
+    <ClCompile Include="BombSyncer.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterClasses.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="multiplayerQuest.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestSync.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadCemu.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Scanner.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldClass.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggerService.cpp">
+      <Filter>Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawning.cpp">
+      <Filter>Spawning</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawningFunction.cpp">
+      <Filter>Spawning</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagerService.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3fBE.cpp">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="QuaternionBE.cpp">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>MemoryAccess</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dllmain_Functions.h" />
+    <ClInclude Include="dllmain_Variables.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Connectivity.h">
+      <Filter>Connectivity</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggerService.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterEquipment.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterLocation.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3f.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawningVariables.h">
+      <Filter>Spawning</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorData.h">
+      <Filter>Spawning\util</Filter>
+    </ClInclude>
+    <ClInclude Include="BotwEdit.h">
+      <Filter>Spawning\util</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCodeActor.h">
+      <Filter>Spawning\util</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyData.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="BombDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="NamesDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathSwapDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalInstance.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="BigEndian.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3fBE.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaternionBE.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="LittleEndian.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="LocationAccess.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="EquippedItems.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="BombAccess.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Extrapolation.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="EquipmentAccess.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3f_Operations.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAccess.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestAccess.h">
+      <Filter>MemoryAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelsDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelData.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="BumiiData.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="BumiiAccess.h">
+      <Filter>DataTypes\EndianTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="PropHuntDTO.h">
+      <Filter>DTO</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Connectivity">
+      <UniqueIdentifier>{0217413c-9fd6-4f53-b2d3-c86362fed470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{d72dc5e6-6f07-483f-9418-ea3fe0bf2c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{be97eaa4-8ca7-4737-a416-1295e733b397}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DTO">
+      <UniqueIdentifier>{d7d82e9e-2578-4294-b9e8-b4450d292baa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataTypes">
+      <UniqueIdentifier>{34adf6ba-2174-4928-a1a7-676af4041e5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spawning">
+      <UniqueIdentifier>{b6182d34-8ab0-4e76-80b3-93f241cfe1eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spawning\util">
+      <UniqueIdentifier>{85d6f0b4-1f40-4846-a87a-ccd274372ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{9dd58c17-a817-40a8-b66d-4e0e596b8ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryAccess">
+      <UniqueIdentifier>{6b8a21f1-bfe2-4968-8516-f0e2a9742486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataTypes\EndianTypes">
+      <UniqueIdentifier>{97a0df45-635e-49bc-8711-a78e4312b2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{72fbf3d0-a220-452d-93fc-b3281609a51b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
