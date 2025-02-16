@@ -79,15 +79,17 @@ namespace Breath_of_the_Wild_Multiplayer.Source_files
 
         public static string ReceiveResponse()
         {
-            byte[] buff = new byte[2048];
+            byte[] buff = new byte[10240];
 
             try
             {
                 _server.Read(buff, 0, buff.Length);
+
                 return Encoding.UTF8.GetString(buff);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine($"READ_ERROR!{e.Message}");
                 return "";
             }
         }
