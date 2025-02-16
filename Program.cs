@@ -147,11 +147,6 @@ namespace BOTWMultiplayerCLI
             await Task.Run(() => {
                 CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
             });
-
-
-            await Task.Run(() => {
-                CemuProcess = Injector.Inject("Cemu", Directory.GetCurrentDirectory() + "\\Resources\\InjectDLL.dll", ProcessesToFilter);
-            });
             
             // If the injection failed after multiple attempts throw an error
             if (CemuProcess == new Process())
@@ -169,7 +164,7 @@ namespace BOTWMultiplayerCLI
             }
 
             Console.WriteLine("Connecting to server...");
-            List<byte> instruction = Encoding.UTF8.GetBytes("!connect;127.0.0.1;5050;;Link;Server Name;0;Jugador1ModelNameLongForASpecificReason:Link;[END]").ToList();
+            List<byte> instruction = Encoding.UTF8.GetBytes("!connect;127.0.0.1;5050;;Link;Server-Name;0;Jugador1ModelNameLongForASpecificReason:Link;[END]").ToList();
 
             await Task.Run(() => {
                 if (!NamedPipes.sendInstruction(instruction.ToArray()))
