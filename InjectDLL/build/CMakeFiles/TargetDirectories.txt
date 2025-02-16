@@ -1,3 +1,0 @@
-/home/mad/Documents/Coding/C#/MilkBarLauncher-main/DLL/InjectDLL/build/CMakeFiles/InjectDLL.dir
-/home/mad/Documents/Coding/C#/MilkBarLauncher-main/DLL/InjectDLL/build/CMakeFiles/edit_cache.dir
-/home/mad/Documents/Coding/C#/MilkBarLauncher-main/DLL/InjectDLL/build/CMakeFiles/rebuild_cache.dir
