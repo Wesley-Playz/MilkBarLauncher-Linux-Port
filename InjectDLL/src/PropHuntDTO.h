@@ -1,6 +1,6 @@
 #pragma once
-#include <Windows.h>
 #include "Vec3f.h"
+#include <cstdint>
 
 using namespace DataTypes;
 
@@ -10,7 +10,7 @@ namespace DTO
 	{
 	public:
 		bool IsPlaying;
-		byte Phase;
+		uint8_t Phase;
 		Vec3f StartingPosition;
 		bool IsHunter;
 	};

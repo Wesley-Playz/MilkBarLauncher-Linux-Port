@@ -1,14 +1,12 @@
 #pragma once
 
-#define _WINSOCKAPI_
 #define BUFF_SIZE 2048
 #define RAPIDJSON_HAS_STDSTRING 1
 
-#include <Windows.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
 #include <string>
-#include <tchar.h>
 #include <map>
 #include <any>
 #include "rapidjson/writer.h"
@@ -24,19 +22,17 @@ namespace Connectivity
     class Client {
 
     private:
-        WSADATA WSAData;
-        SOCKET server;
-        SOCKADDR_IN addr;
+        int server;
+        struct sockaddr_in addr;
         char buffer[7168];
 
     public:
         void connectToServer(std::string IP, std::string PORT);
         void sendMessage(std::string command, std::string message);
-        void sendBytes(byte Message[7168]);
+        void sendBytes(uint8_t Message[7168]);
         std::string receive();
-        void receiveBytes(byte* Output);
-        void close();
-
+        void receiveBytes(uint8_t* Output);
+        void closeConnection();
     };
 
     ////////////////// NamedPipes.cpp //////////////////
@@ -44,7 +40,7 @@ namespace Connectivity
     class namedPipeClass
     {
     public:
-        HANDLE hPipe;
+        int pipe_fd;
         void createServer();
     };
 

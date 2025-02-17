@@ -1,10 +1,10 @@
 #pragma once
 
-#define _WINSOCKAPI_
 #include <vector>
-#include <Windows.h>
 #include <string>
 #include <iostream>
+#include <cstdint>   // For uint32_t, uint64_t
+#include <shared_mutex> // For std::shared_mutex
 #include "Connectivity.h"
 #include "Memory.h"
 #include "LoggerService.h"
@@ -16,8 +16,8 @@ namespace Main
 
 	extern uint64_t baseAddr;
 
-	extern DWORD t0;
-	extern DWORD t1;
+	extern uint32_t t0;
+	extern uint32_t t1;
 	extern char message[];
 	extern std::string serverData;
 	extern std::string serverName;
@@ -25,7 +25,7 @@ namespace Main
 	extern bool IsProp;
 	extern bool IsPropHuntStopped;
 	extern bool HidePlayer32;
-	extern std::vector<byte> FoundPlayers;
+	extern std::vector<uint8_t> FoundPlayers;
 	extern std::vector<bool> ConnectedPlayers;
 
 	extern Memory::Link_class* Link;
@@ -41,14 +41,12 @@ namespace Main
 	extern Memory::BombSyncer* BombSync;
 	extern bool QuestSyncReady;
 
-	extern std::vector < std::vector<float> > Jugador1Queue;
-	extern std::vector < std::vector<float> > Jugador2Queue;
-	extern std::vector < std::vector<float> > Jugador3Queue;
-	extern std::vector < std::vector<float> > Jugador4Queue;
+	extern std::vector<std::vector<float>> Jugador1Queue;
+	extern std::vector<std::vector<float>> Jugador2Queue;
+	extern std::vector<std::vector<float>> Jugador3Queue;
+	extern std::vector<std::vector<float>> Jugador4Queue;
 
-	extern std::vector < std::vector<float> > JugadoresQueues[];
-
-	extern Connectivity::namedPipeClass* namedPipe;
+	extern std::vector<std::vector<float>> JugadoresQueues[];
 
 	extern Connectivity::Client* client;
 

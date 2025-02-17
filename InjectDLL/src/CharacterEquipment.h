@@ -7,7 +7,7 @@ namespace DataTypes
     class CharacterEquipment
     {
     public:
-        std::byte WType; // Use std::byte for better type safety (C++17)
+        short WType;
         short Sword;
         short Shield;
         short Bow;

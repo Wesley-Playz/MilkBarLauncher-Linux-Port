@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.h"
+#include <bits/this_thread_sleep.h>
 
 using namespace DataTypes;
 
@@ -26,7 +27,7 @@ namespace MemoryAccess
 			{
 				this->Day->set(input->Day, __FUNCTION__);
 				this->WritableTime->set(input->Time, __FUNCTION__);
-				Sleep(100);
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 
 			Weather = input->Weather;
@@ -97,13 +98,13 @@ namespace MemoryAccess
 
 		LittleEndian<bool>* NotPaused;
 
-		DWORD LastQuestUpdate = 0;
+		uint32_t LastQuestUpdate = 0;
 
 		int playerNumber;
 		PropHunt_Flags propHuntFlags = PropHunt_Flags();
 		
 		/* PVP */
-		DWORD LastHealthUpdate = GetTickCount();
+		uint32_t LastHealthUpdate = GetTickCount();
 		std::map<std::string, int> WeaponDamages = readWeaponDamages();
 
 		/* Actor Spawning */
@@ -328,7 +329,7 @@ namespace MemoryAccess
 			while (addr < 30000)
 			{
 				Logging::LoggerService::LogDebug("Could not find hold address.", __FUNCTION__);
-				Sleep(1000);
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 				if (retries == 15)
 				{
@@ -384,7 +385,7 @@ namespace MemoryAccess
 					result[std::stoi(Memory::read_string(addr + 7, 2, __FUNCTION__))].AnimationFlag = addr;
 				
 				uint64_t offset = 25;
-				std::vector<BYTE> jugador = { 0x4A, 0x75, 0x67, 0x61, 0x64, 0x6F, 0x72 };
+				std::vector<uint8_t> jugador = { 0x4A, 0x75, 0x67, 0x61, 0x64, 0x6F, 0x72 };
 
 				if (i == 33)
 					break;
@@ -408,7 +409,7 @@ namespace MemoryAccess
 			//addr += 0x4000;
 			offset = 0;
 
-			std::vector<BYTE> attack = { 0x5F, 0x41, 0x74, 0x74, 0x61, 0x63, 0x6B, 0x41, 0x6E, 0x69, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E };
+			std::vector<uint8_t> attack = { 0x5F, 0x41, 0x74, 0x74, 0x61, 0x63, 0x6B, 0x41, 0x6E, 0x69, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E };
 
 			while (offset < 0x10000)
 			{
@@ -452,7 +453,7 @@ namespace MemoryAccess
 			while (addr < 30000)
 			{
 				Logging::LoggerService::LogDebug("Could not find map pin address.", __FUNCTION__);
-				Sleep(1000);
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 				if (retries == 15)
 				{
@@ -468,7 +469,7 @@ namespace MemoryAccess
 				result[FlagOrder2[i]].MapPin = addr;
 
 				uint64_t offset = 0x40;
-				std::vector<BYTE> MapPin = { 0x46, 0x40, 0xD2, 0x00, 0x45, 0x12, 0x98, 0x00 };
+				std::vector<uint8_t> MapPin = { 0x46, 0x40, 0xD2, 0x00, 0x45, 0x12, 0x98, 0x00 };
 
 				while (true)
 				{

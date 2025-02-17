@@ -1,145 +1,143 @@
 #pragma once
 
-#include <Windows.h>
-#include "Memory.h"
+#include <sys/mman.h> // For memory management on Linux
+#include <unistd.h>   // For usleep
+#include <fcntl.h>    // For file operations
+#include <iostream>   // For logging
+#include <cstring>    // For memcpy
+#include <vector>
+#include <stdexcept>  // For exceptions
 
 namespace DataTypes
 {
-	template <typename T>
-	class LittleEndian
-	{
-	public:
-		uint64_t address;
-		T LastKnown;
+    template <typename T>
+    class LittleEndian
+    {
+    public:
+        uint64_t address;
+        T LastKnown;
 
-		LittleEndian();
-		LittleEndian(uint64_t Address, const char* caller);
-		LittleEndian(uint64_t baseAddr, std::vector<int> offsets, int finalOffset, const char* caller);
-		LittleEndian(std::vector<int> signature, uint64_t finalOffset, const char* caller, uint64_t scanOffset = -1);
+        LittleEndian();
+        LittleEndian(uint64_t Address, const char* caller);
+        LittleEndian(uint64_t baseAddr, std::vector<int> offsets, int finalOffset, const char* caller);
+        LittleEndian(std::vector<int> signature, uint64_t finalOffset, const char* caller, uint64_t scanOffset = -1);
 
-		void setAddress(uint64_t Address, const char* caller, bool Validate = true);
+        void setAddress(uint64_t Address, const char* caller, bool Validate = true);
 
-		void set(T val, const char* caller);
-		T get(const char* caller);
+        void set(T val, const char* caller);
+        T get(const char* caller);
 
-	private:
-		DWORD* Pointer;
-		bool AddressSet = false;
-		const char* callerFunction = "";
+    private:
+        T* Pointer;
+        bool AddressSet = false;
+        const char* callerFunction = "";
 
-		bool ValidateAddress(uint64_t Address, const char* caller);
-	};
+        bool ValidateAddress(uint64_t Address, const char* caller);
+    };
 
-	template <typename T>
-	LittleEndian<T>::LittleEndian()
-	{
+    template <typename T>
+    LittleEndian<T>::LittleEndian()
+    {
+        // Default constructor
+    }
 
-	}
+    template <typename T>
+    LittleEndian<T>::LittleEndian(uint64_t Address, const char* caller)
+    {
+        setAddress(Address, caller);
+    }
 
-	template <typename T>
-	LittleEndian<T>::LittleEndian(uint64_t Address, const char* caller)
-	{
-		setAddress(Address, caller);
-	}
+    template <typename T>
+    LittleEndian<T>::LittleEndian(uint64_t baseAddr, std::vector<int> offsets, int finalOffset, const char* caller)
+    {
+        uint64_t addr = Memory::ReadPointers(baseAddr, offsets, true) + finalOffset;
+        setAddress(addr, caller);
+    }
 
-	template <typename T>
-	LittleEndian<T>::LittleEndian(uint64_t baseAddr, std::vector<int> offsets, int finalOffset, const char* caller)
-	{
-		uint64_t addr = Memory::ReadPointers(baseAddr, offsets, true) + finalOffset;
+    template <typename T>
+    LittleEndian<T>::LittleEndian(std::vector<int> signature, uint64_t finalOffset, const char* caller, uint64_t scanOffset)
+    {
+        bool saveOffset = false;
+        if (scanOffset == (uint64_t)(-1))
+        {
+            scanOffset = Memory::ScanOffset;
+            saveOffset = true;
+        }
 
-		setAddress(addr, caller);
-	}
+        uint64_t addr = Memory::PatternScan(signature, Memory::getBaseAddress(), 8, scanOffset) + finalOffset;
 
-	template <typename T>
-	LittleEndian<T>::LittleEndian(std::vector<int> signature, uint64_t finalOffset, const char* caller, uint64_t scanOffset)
-	{
-		bool saveOffset = false;
-		if (scanOffset == (uint64_t)(-1))
-		{
-			scanOffset = Memory::ScanOffset;
-			saveOffset = true;
-		}
+        int retries = 0;
+        while (addr - finalOffset < 30000)
+        {
+            std::cerr << "Failed to find address: " << caller << std::endl;
+            usleep(1000000); // Sleep for 1 second (Linux uses microseconds)
 
-		uint64_t addr = Memory::PatternScan(signature, Memory::getBaseAddress(), 8, scanOffset) + finalOffset;
+            if (retries == 15)
+            {
+                std::cerr << "Could not find location address. Closing..." << std::endl;
+                throw std::runtime_error("Failed to find mod address. Make sure that the mod is installed correctly in BCML and that BCML, Extended Memory and Multiplayer Utilities graphics packs are enabled.");
+            }
 
-		int retries = 0;
-		while (addr - finalOffset < 30000)
-		{
-			Logging::LoggerService::LogDebug("Failed to find address", caller);
-			Sleep(1000);
+            retries++;
+            addr = Memory::PatternScan(signature, Memory::getBaseAddress(), 8, scanOffset) + finalOffset;
+        }
 
-			if (retries == 15)
-			{
-				Logging::LoggerService::LogError("Could not find location address. Closing...");
-				throw L"Failed to find mod address. Make sure that the mod is installed correctly in BCML and that BCML, Extended Memory and Multiplayer Utilities graphics packs are enabled.";
-			}
+        if (saveOffset)
+            Memory::ScanOffset = addr - Memory::RegionStart - 0x50;
 
-			retries++;
-			addr = Memory::PatternScan(signature, Memory::getBaseAddress(), 8, scanOffset) + finalOffset;
-		}
+        setAddress(addr, caller);
+    }
 
-		if (saveOffset)
-			Memory::ScanOffset = addr - Memory::RegionStart - 0x50;
+    template <typename T>
+    void LittleEndian<T>::setAddress(uint64_t Address, const char* caller, bool Validate)
+    {
+        if (Validate)
+            AddressSet = ValidateAddress(Address, caller);
+        else
+            AddressSet = true;
 
-		setAddress(addr, caller);
-	}
+        if (AddressSet)
+        {
+            this->Pointer = reinterpret_cast<T*>(Address);
+            this->address = Address;
+        }
+    }
 
-	template <typename T>
-	void LittleEndian<T>::setAddress(uint64_t Address, const char* caller, bool Validate)
-	{
-		if (Validate)
-			AddressSet = ValidateAddress(Address, caller);
-		else
-			AddressSet = true;
+    template <typename T>
+    void LittleEndian<T>::set(T val, const char* caller)
+    {
+        LastKnown = val;
 
-		if (AddressSet)
-		{
-			this->Pointer = (DWORD*)(Address);
-			this->address = Address;
-		}
-	}
+        if (!AddressSet)
+            return;
 
-	template <typename T>
-	void LittleEndian<T>::set(T val, const char* caller)
-	{
-		LastKnown = val;
+        memcpy(Pointer, &val, sizeof(T));
+    }
 
-		if (!AddressSet)
-			return;
+    template <typename T>
+    T LittleEndian<T>::get(const char* caller)
+    {
+        if (!AddressSet)
+            return static_cast<T>(0);
 
-		memcpy(Pointer, &val, sizeof(T));
-	}
+        memcpy(&LastKnown, Pointer, sizeof(T));
+        return LastKnown;
+    }
 
-	template <typename T>
-	T LittleEndian<T>::get(const char* caller)
-	{
-		if (!AddressSet)
-			return (T)0;
+    template <typename T>
+    bool LittleEndian<T>::ValidateAddress(uint64_t Address, const char* caller)
+    {
+        if (Address == 0)
+            return false;
 
-		memcpy(&LastKnown, Pointer, sizeof(T));
-		return LastKnown;
-	}
+        // Use mincore to check if the memory is valid
+        unsigned char vec;
+        if (mincore(reinterpret_cast<void*>(Address), sizeof(T), &vec) == -1)
+        {
+            std::cerr << "Failed to validate address: " << caller << std::endl;
+            return false;
+        }
 
-	template <typename T>
-	bool LittleEndian<T>::ValidateAddress(uint64_t Address, const char* caller)
-	{
-
-		if (Address == 0)
-			return false;
-
-		MEMORY_BASIC_INFORMATION mbi{ 0 };
-		DWORD protectflags = (PAGE_GUARD | PAGE_NOCACHE | PAGE_NOACCESS);
-
-		if (VirtualQuery((LPCVOID)Address, &mbi, sizeof(mbi)))
-		{
-			if (mbi.Protect & protectflags || !(mbi.State & MEM_COMMIT)) {
-				Logging::LoggerService::LogError("Failed to validate address.", caller);
-
-				exit(1);
-			}
-		}
-
-		return true;
-	}
-
+        return true;
+    }
 }

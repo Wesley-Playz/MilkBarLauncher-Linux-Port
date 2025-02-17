@@ -3,7 +3,7 @@
 
 namespace DataTypes
 {
-	enum BombStatus : byte
+	enum BombStatus : uint8_t
 	{
 		Normal,
 		Exploded,

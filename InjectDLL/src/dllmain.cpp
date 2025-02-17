@@ -1,8 +1,14 @@
-#define _WINSOCKAPI_
-#include <vector>
-#include <Windows.h>
-#include <string>
 #include <iostream>
+#include <vector>
+#include <thread>
+#include <mutex>
+#include <shared_mutex>
+#include <chrono>
+#include <cstring>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "dllmain_Variables.h"
 #include "dllmain_Functions.h"
 #include "Connectivity.h"
@@ -29,11 +35,11 @@ Memory::BombSyncer* Main::BombSync = new Memory::BombSyncer();
 
 uint64_t Main::baseAddr = Memory::getBaseAddress();
 
-std::vector < std::vector<float> > Main::Jugador1Queue = { {}, {}, {} };
-std::vector < std::vector<float> > Main::Jugador2Queue = { {}, {}, {} };
-std::vector < std::vector<float> > Main::Jugador3Queue = { {}, {}, {} };
-std::vector < std::vector<float> > Main::Jugador4Queue = { {}, {}, {} };
-std::vector < std::vector<float> > Main::JugadoresQueues[] = {Jugador1Queue, Jugador2Queue, Jugador3Queue, Jugador4Queue};
+std::vector<std::vector<float>> Main::Jugador1Queue = { {}, {}, {} };
+std::vector<std::vector<float>> Main::Jugador2Queue = { {}, {}, {} };
+std::vector<std::vector<float>> Main::Jugador3Queue = { {}, {}, {} };
+std::vector<std::vector<float>> Main::Jugador4Queue = { {}, {}, {} };
+std::vector<std::vector<float>> Main::JugadoresQueues[] = {Jugador1Queue, Jugador2Queue, Jugador3Queue, Jugador4Queue};
 
 Connectivity::namedPipeClass* Main::namedPipe = new Connectivity::namedPipeClass();
 Connectivity::Client* Main::client = new Connectivity::Client();
@@ -53,8 +59,8 @@ std::vector<byte> Main::FoundPlayers = {};
 std::string Main::serverName = "";
 std::vector<bool> Main::ConnectedPlayers = { false, false, false, false };
 
-DWORD Main::t0 = GetTickCount();
-DWORD Main::t1 = GetTickCount();
+auto Main::t0 = std::chrono::steady_clock::now();
+auto Main::t1 = std::chrono::steady_clock::now();
 
 std::string Main::serverData = "";
 
@@ -73,100 +79,65 @@ bool Main::isPaused = true;
 
 std::vector<float> Main::oldLocations[] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
-HMODULE myhModule;
-
 bool Main::QuestSyncReady = false;
 
-
-DWORD __stdcall EjectThread(LPVOID lpParameter) {
-    Sleep(100);
-    FreeLibraryAndExitThread(myhModule, 0);
-}
-
-bool startServerLoop()
+void startServerLoop()
 {
-
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout); // output only
     std::cout << "Start of the console" << std::endl;
-
-    CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Main::mainServerLoop, 0, 0, 0);
-    return true;
-
+    std::thread(Main::mainServerLoop).detach();
 }
 
 void readInstruction()
 {
-
-    bool success = false;
-    DWORD read;
     bool started = false;
-
     while (!started)
     {
-        TCHAR chBuff[BUFF_SIZE];
-        TCHAR responsePositive[BUFF_SIZE] = "Succeeded";
-        TCHAR responseNegative[BUFF_SIZE] = "Failed";
-        bool response = false;
+        char chBuff[1024] = {0};
+        int pipe_fd = open("/tmp/my_named_pipe", O_RDONLY);
+        read(pipe_fd, chBuff, sizeof(chBuff));
+        close(pipe_fd);
 
-        do
+        std::string command(chBuff);
+        std::string response;
+
+        if (command.find("!connect") != std::string::npos)
         {
-            success = ReadFile(namedPipe->hPipe, chBuff, BUFF_SIZE * sizeof(TCHAR), &read, nullptr);
-            
-            if (strstr(chBuff, "!connect"))
+            if (Main::connectToServer(chBuff))
             {
-                response = Main::connectToServer(chBuff);
-                memset(chBuff, 0, sizeof(chBuff));
-
+                response = "Succeeded";
                 Logging::LoggerService::LogInformation("Connected to server successfully");
-            }
-            else if (strstr(chBuff, "!startServerLoop"))
-            {
-                Logging::LoggerService::LogInformation("Start server loop requested...");
-
-                if (!started)
-                {
-                    response = true;
-                    started = true;
-                }
-                else
-                {
-                    exit(1);
-                }
-            }
-
-            if (response)
-            {
-                success = WriteFile(namedPipe->hPipe, responsePositive, BUFF_SIZE * sizeof(TCHAR), &read, nullptr);
             }
             else
             {
-                success = WriteFile(namedPipe->hPipe, responseNegative, BUFF_SIZE * sizeof(TCHAR), &read, nullptr);
+                response = "Failed";
             }
-        } while (!success);
+        }
+        else if (command.find("!startServerLoop") != std::string::npos)
+        {
+            Logging::LoggerService::LogInformation("Start server loop requested...");
+            response = "Succeeded";
+            started = true;
+        }
 
+        int pipe_out = open("/tmp/my_named_pipe", O_WRONLY);
+        write(pipe_out, response.c_str(), response.size());
+        close(pipe_out);
     }
 
     startServerLoop();
 }
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+__attribute__((constructor))
+void init()
 {
-    switch (ul_reason_for_call)
-    {
-    case DLL_PROCESS_ATTACH:
-        //AllocConsole();
-        Main::SetupAssemblyPatches();
-        Logging::LoggerService::StartLoggerService();
-        namedPipe->createServer();
-        CreateThread(0, 0, (LPTHREAD_START_ROUTINE)readInstruction, 0, 0, 0);
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
-    return TRUE;
+    Main::SetupAssemblyPatches();
+    Logging::LoggerService::StartLoggerService();
+    mkfifo("/tmp/my_named_pipe", 0666);
+    std::thread(readInstruction).detach();
+}
+
+__attribute__((destructor))
+void cleanup()
+{
+    unlink("/tmp/my_named_pipe");
 }
